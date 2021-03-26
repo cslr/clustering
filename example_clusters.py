@@ -31,7 +31,7 @@ args = parser.parse_args()
 
 # Set up three different clusters of data points
 covariance = [[3, 0], [0, 3]]
-n_points = 3
+n_points = 50
 x0, y0 = np.random.multivariate_normal([0, 0], covariance, n_points).T
 x1, y1 = np.random.multivariate_normal([10, 5], covariance, n_points).T
 x2, y2 = np.random.multivariate_normal([5, 15], covariance, n_points).T

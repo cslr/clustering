@@ -1,33 +1,41 @@
-# Copyright 2020 D-Wave Systems Inc.
+# Copyright 2021 Tomas Ukkonen
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Simple script for defining and optimizing Ising model
+# 
+
 import math
 
 import dwavebinarycsp
 import dwave.inspector
 import dimod
+import random
 from dwave.system import EmbeddingComposite, DWaveSampler
 
 from utilities import get_groupings, visualize_groupings, visualize_scatterplot
 
+print("Defining model parameters..")
 
 # build dicts (Ising model parameters)
 
-hj = {0: 1, 1: -1, 2: .5}
-Jij = { (0,1): .5, (1,2): .5, (0,2): -0.5 }
+NVAR = 50
 
-bqm = dimod.BinaryQuadraticModel(hj, Jij, 0.0, dimod.Vartype.SPIN)
+## hi = {0: 1, 1: -1, 2: .5}
+## Jji = { (0,1): .5, (1,2): .5, (0,2): -0.5 }
 
+hi = {}
+Jji = {}
+
+for i in range(NVAR):
+    hi[i] = random.random()
+    for j in range(i+1,NVAR):
+        Jji[(j,i)] = random.random()
+
+print("{} parameters in Ising model.".format(str(len(Jji)+len(hi))))
+
+# another parameter value is dimod.Vartype.BINARY for 0/1 valued variables
+bqm = dimod.BinaryQuadraticModel(hi, Jji, 0.0, dimod.Vartype.SPIN)
+
+print("Sampling model..")
 
 sampler = EmbeddingComposite(DWaveSampler())
 sampleset = sampler.sample(bqm,
