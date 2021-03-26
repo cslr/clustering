@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+#
 # Copyright 2021 Tomas Ukkonen
 #
 # Simple script for defining and optimizing Ising model
